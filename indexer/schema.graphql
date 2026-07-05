@@ -1,0 +1,97 @@
+type TokenFactory_FeeTokenCreated {
+  id: ID!
+  token: String!
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  decimalPlaces: BigInt!
+  transferTax: BigInt!
+  owner: String!
+}
+
+type TokenFactory_StandardTokenCreated {
+  id: ID!
+  token: String!
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  decimalPlaces: BigInt!
+  owner: String!
+}
+
+enum TokenType {
+  FEE
+  STANDARD
+}
+
+type Tokens {
+  id: ID!
+  token: String!
+  name: String!
+  symbol: String!
+  totalSupply: BigInt!
+  decimalPlaces: BigInt!
+  owner: String!
+  tokenType: TokenType!
+  createdAt: BigInt!
+  fee: BigInt
+  transferTax: BigInt
+}
+
+type PlatformStats {
+  id: ID! # Use "1" as the only ID for global stats
+  totalTokens: BigInt
+  totalTokenLockers: BigInt
+  totalLPLockers: BigInt
+  totalSales: BigInt
+}
+
+enum PresaleStatus {
+  ACTIVE
+  FINALIZED
+}
+
+type Presale {
+  id: ID!
+  saleAddress: String!
+  saleOwner: String!
+  token: String!
+  createdAt: BigInt!
+  status: PresaleStatus!
+  # SaleData fields from SaleCreated event
+  startTime: BigInt
+  endTime: BigInt
+  softCap: BigInt
+  hardCap: BigInt
+  maxBuy: BigInt
+  totalTokensForSale: BigInt
+  totalTokensForLiquidity: BigInt
+  liquidityBPS: BigInt
+  salesJson: String
+  # Live tracking (updated on each purchase)
+  saleSold: BigInt
+  participantCount: BigInt
+  # Finalization data (set when SaleFinalized event fires)
+  totalSold: BigInt
+  liquidityAmount: BigInt
+  treasuryAmount: BigInt
+}
+
+type PresalePurchase {
+  id: ID!
+  saleAddress: String!
+  buyer: String!
+  ethAmount: BigInt!
+  createdAt: BigInt!
+}
+
+type Lock {
+  id: ID!
+  token: String!
+  owner: String!
+  lockingAmount: BigInt!
+  lockTimeEnd: BigInt!
+  projectImageUrl: String!
+  createdAt: BigInt!
+  lockAddress: String!
+}

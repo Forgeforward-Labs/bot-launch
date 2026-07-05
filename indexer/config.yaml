@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=./node_modules/envio/evm.schema.json
+name: envio-indexer
+networks:
+- id: 968
+  rpc: https://rpc.bohr.life
+  start_block: 15196082
+  contracts:
+  - name: TokenFactory
+    address: 0x2284Cff73d2384fDF91E84060d40A41581E642Ac
+    handler: src/EventHandlers.ts
+    events:
+    - event: FeeTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, uint8 transferTax, address owner)
+    - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
+  - name: LockFactory
+    address:
+    - 0x03a901a563Fcd2692046FFD08a510F0246253596
+    handler: src/EventHandlers.ts
+    events:
+    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl)
+  - name: SalesFactory
+    address:
+    - 0x2617C66707d40b33a869b1dBb392B6FA5CA1D156
+    abi_file_path: ./abis/SalesFactory.json
+    handler: src/EventHandlers.ts
+    events:
+    - event: SaleCreated
+  - name: Sales
+    handler: src/EventHandlers.ts
+    events:
+    - event: TokensPurchased(address indexed buyer, uint256 ethAmount)
+    - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
+    - event: Refunded(address indexed participant, uint256 ethAmount)
+    - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
+unordered_multichain_mode: true
+preload_handlers: true

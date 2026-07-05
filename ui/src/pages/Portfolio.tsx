@@ -275,7 +275,7 @@ export default function PortfolioView() {
                     >
                       {claimLabel}
                     </span>
-                    <StatusBadge status={item.saleStatus} />
+                    <StatusBadge status={item.saleStatus as any} />
                   </div>
                 </div>
               </div>

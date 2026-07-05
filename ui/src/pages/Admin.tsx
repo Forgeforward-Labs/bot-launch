@@ -6,8 +6,6 @@ import { formatDistanceToNow } from "date-fns";
 import {
   useGetPresalesByOwnerQuery,
   useGetPresalePurchasesQuery,
-  type Presale,
-  useGetAllPresalesQuery,
 } from "@/graphql/__generated__/types-and-hooks";
 import StatusBadge from "@/components/launchpad/StatusBadge";
 import Modal from "@/components/launchpad/Modal";
@@ -93,7 +91,7 @@ export default function Admin() {
   const canFinalize =
     selectedPresale &&
     (presaleStatus === "ended" || presaleStatus === "filled") &&
-    presaleStatus !== "finalized";
+    true;
 
   const handleFinalize = async () => {
     if (!selectedPresale || !address) return;

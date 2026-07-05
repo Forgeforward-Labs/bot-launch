@@ -1,4 +1,3 @@
-import React from "react";
 import StatusBadge from "./launchpad/StatusBadge";
 import PresaleProgressBar from "./launchpad/PresaleProgressBar";
 import { Presale } from "@/lib/launchpad-data";

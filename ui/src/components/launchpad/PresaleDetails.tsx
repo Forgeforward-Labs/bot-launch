@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MOCK_PRESALES, MOCK_WHITELIST } from "@/lib/launchpad-data";
 import { useAccount } from "wagmi";
 import { useNavigate } from "react-router-dom";

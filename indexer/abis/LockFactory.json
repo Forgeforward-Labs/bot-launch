@@ -51,6 +51,12 @@
           "internalType": "string",
           "name": "projectImageUrl",
           "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "isLpLock",
+          "type": "bool"
         }
       ],
       "name": "LockCreated",
@@ -82,6 +88,11 @@
           "internalType": "string",
           "name": "_projectImageUrl",
           "type": "string"
+        },
+        {
+          "internalType": "bool",
+          "name": "_isLpLock",
+          "type": "bool"
         }
       ],
       "name": "createLock",

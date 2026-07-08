@@ -92,6 +92,8 @@ TokenFactory.StandardTokenCreated.handler(async ({ event, context }) => {
 });
 
 LockFactory.LockCreated.handler(async ({ event, context }) => {
+  const isLpLock = event.params.isLpLock;
+
   const entity: Lock = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     token: event.params.token,
@@ -101,6 +103,7 @@ LockFactory.LockCreated.handler(async ({ event, context }) => {
     projectImageUrl: event.params.projectImageUrl,
     createdAt: BigInt(event.block.timestamp),
     lockAddress: event.params.lock,
+    isLpLock,
   };
 
   const stats = await context.PlatformStats.get("1");
@@ -109,16 +112,20 @@ LockFactory.LockCreated.handler(async ({ event, context }) => {
     context.PlatformStats.set({
       id: "1",
       totalTokens: BigInt(0),
-      totalTokenLockers: BigInt(1),
-      totalLPLockers: BigInt(0),
+      totalTokenLockers: isLpLock ? BigInt(0) : BigInt(1),
+      totalLPLockers: isLpLock ? BigInt(1) : BigInt(0),
       totalSales: BigInt(0),
     });
   } else {
     context.PlatformStats.set({
       id: "1",
       totalTokens: stats.totalTokens,
-      totalTokenLockers: BigInt(stats.totalTokenLockers ?? 0) + BigInt(1),
-      totalLPLockers: stats.totalLPLockers,
+      totalTokenLockers: isLpLock
+        ? stats.totalTokenLockers
+        : BigInt(stats.totalTokenLockers ?? 0) + BigInt(1),
+      totalLPLockers: isLpLock
+        ? BigInt(stats.totalLPLockers ?? 0) + BigInt(1)
+        : stats.totalLPLockers,
       totalSales: stats.totalSales,
     });
   }

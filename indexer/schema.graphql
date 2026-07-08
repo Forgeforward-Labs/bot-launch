@@ -94,4 +94,5 @@ type Lock {
   projectImageUrl: String!
   createdAt: BigInt!
   lockAddress: String!
+  isLpLock: Boolean!
 }

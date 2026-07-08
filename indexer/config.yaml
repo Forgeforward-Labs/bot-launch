@@ -13,10 +13,10 @@ networks:
     - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
   - name: LockFactory
     address:
-    - 0x03a901a563Fcd2692046FFD08a510F0246253596
+    - 0x0ff13de01a0cac7cbe377fffe3992086a6bc1e72
     handler: src/EventHandlers.ts
     events:
-    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl)
+    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
   - name: SalesFactory
     address:
     - 0x2617C66707d40b33a869b1dBb392B6FA5CA1D156

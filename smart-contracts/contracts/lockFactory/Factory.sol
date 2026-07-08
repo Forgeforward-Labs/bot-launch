@@ -12,28 +12,21 @@ contract LockFactory {
         address indexed owner,
         uint256 lockingAmount,
         uint256 lockTimeEnd,
-        string projectImageUrl
+        string projectImageUrl,
+        bool isLpLock
     );
 
     //errors
     error TransferFailed();
     error InvalidEndTime();
 
-    /**
-     * @dev Create a new lock
-     * @param _token The token to lock
-     * @param _owner The owner of the lock
-     * @param _lockingAmount The amount to lock
-     * @param _lockTimeEnd The time the lock ends
-     * @param _projectImageUrl The image url of the project
-     */
-
     function createLock(
         address _token,
         address _owner,
         uint256 _lockingAmount,
         uint256 _lockTimeEnd,
-        string memory _projectImageUrl
+        string memory _projectImageUrl,
+        bool _isLpLock
     ) external payable returns (address) {
         if (_lockTimeEnd < block.timestamp) {
             revert InvalidEndTime();
@@ -47,7 +40,6 @@ contract LockFactory {
             _projectImageUrl
         );
 
-        //transfer the funds to the lock
         if (_token == address(0)) {
             (bool success, ) = payable(address(lock)).call{
                 value: _lockingAmount
@@ -63,7 +55,8 @@ contract LockFactory {
             _owner,
             _lockingAmount,
             _lockTimeEnd,
-            _projectImageUrl
+            _projectImageUrl,
+            _isLpLock
         );
         return address(lock);
     }

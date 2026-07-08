@@ -10,6 +10,8 @@ import {Whitelistable} from "./Whitelistable.sol";
 import {Standard} from "../tokenFactory/tokens/Standard.sol";
 
 import {IUniswapV2Router} from "../interfaces/IUniswapV2Router.sol";
+import {ILPVault} from "../interfaces/ILPVault.sol";
+import {BDEX_V2_ROUTER} from "../libraries/DexAddresses.sol";
 
 contract Sales is Ownable, Whitelistable {
     uint256 public constant TREASURY_ALLOCATION_PERCENTAGE = 10;
@@ -108,9 +110,6 @@ contract Sales is Ownable, Whitelistable {
         LPVault = _LPVault;
         saleData = _saleData;
         tokenData = _tokenData;
-        saleData.totalTokensForLiquidity =
-            (_saleData.liquidityBPS * _tokenData.tokenTotalSupply) /
-            100;
         transferOwnership(_owner);
         TREASURY_ADDRESS = _treasuryAddress;
     }
@@ -185,7 +184,12 @@ contract Sales is Ownable, Whitelistable {
         uint256 treasury = (TREASURY_ALLOCATION_PERCENTAGE * sold) / 100;
         payable(TREASURY_ADDRESS).transfer(treasury);
         payable(casher).transfer(sold - liquidity - treasury);
-        IUniswapV2Router(address(0)).addLiquidityETH(
+
+        IERC20(token).approve(
+            BDEX_V2_ROUTER,
+            saleData.totalTokensForLiquidity
+        );
+        IUniswapV2Router(BDEX_V2_ROUTER).addLiquidityETH{value: liquidity}(
             token,
             saleData.totalTokensForLiquidity,
             saleData.totalTokensForLiquidity,
@@ -193,6 +197,7 @@ contract Sales is Ownable, Whitelistable {
             LPVault,
             block.timestamp + 5
         );
+        ILPVault(LPVault).registerLP(token);
 
         emit SaleFinalized(sold, liquidity, treasury);
     }

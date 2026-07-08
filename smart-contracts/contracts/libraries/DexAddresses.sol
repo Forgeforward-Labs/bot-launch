@@ -1,0 +1,6 @@
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.20;
+
+address constant BDEX_V2_FACTORY = 0x65b8e98ceA190d8c28B3e4716402027f634d15a3;
+address constant BDEX_V2_ROUTER = 0xD6425a02f0845B8D99e349C34D2E7A576E177345;
+address constant BDEX_V2_WBOT = 0xD5452816194a3784dBa983426cCe7c122F4abd30;

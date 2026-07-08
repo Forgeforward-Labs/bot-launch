@@ -2,7 +2,7 @@ import { useWalletClient } from "wagmi";
 import { lockFactoryAddress } from "@/lib/constants";
 import abi from "../abis/lockFactory";
 import { useReadClient } from "@/lib/useReadClient";
-import { zeroAddress } from "viem";
+import { zeroAddress, parseUnits } from "viem";
 import { toast } from "sonner";
 
 export const useLockFactory = () => {
@@ -20,13 +20,20 @@ export const useLockFactory = () => {
     amount,
     lockTimeEnd,
     decimals,
+    isLpLock,
   }: {
     token: string;
     amount: number;
     lockTimeEnd: number;
     decimals: number;
+    isLpLock: boolean;
   }) => {
-    const amountInWei = BigInt(amount * 10 ** decimals);
+    if (!client) {
+      toast.error("Wallet not connected");
+      return;
+    }
+
+    const amountInWei = parseUnits(amount.toString(), decimals);
 
     try {
       // For ERC20 tokens, we need to approve the factory contract first
@@ -48,7 +55,7 @@ export const useLockFactory = () => {
           ],
           functionName: "allowance",
           args: [
-            client?.account.address as `0x${string}`,
+            client.account.address as `0x${string}`,
             lockFactoryAddress as `0x${string}`,
           ],
         })) as bigint;
@@ -74,12 +81,12 @@ export const useLockFactory = () => {
               ],
               functionName: "approve",
               args: [lockFactoryAddress as `0x${string}`, amountInWei],
-              account: client?.account,
+              account: client.account,
             }
           );
 
-          const approveTx = await client?.writeContract(approveRequest);
-          await readClient?.waitForTransactionReceipt({
+          const approveTx = await client.writeContract(approveRequest);
+          await readClient.waitForTransactionReceipt({
             hash: approveTx as `0x${string}`,
           });
         }
@@ -91,20 +98,21 @@ export const useLockFactory = () => {
         functionName: "createLock",
         args: [
           token,
-          client?.account.address,
+          client.account.address,
           amountInWei,
           BigInt(lockTimeEnd),
-          "https://sominia.io/images/sominia.png",
+          "",
+          isLpLock,
         ],
-        account: client?.account,
+        account: client.account,
         value: token === zeroAddress ? amountInWei : BigInt(0),
       });
 
       console.log("request", request);
 
-      const tx = await client?.writeContract(request);
+      const tx = await client.writeContract(request);
 
-      const receipt = await readClient?.waitForTransactionReceipt({
+      const receipt = await readClient.waitForTransactionReceipt({
         hash: tx as `0x${string}`,
       });
 

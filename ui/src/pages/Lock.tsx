@@ -72,26 +72,26 @@ const Lock = () => {
     }
 
     let lockEndTime = 0;
-    const now = Date.now();
+    const nowSecs = Math.floor(Date.now() / 1000);
 
     switch (lockDuration) {
       case "30":
-        lockEndTime = now + 30 * 24 * 60 * 60;
+        lockEndTime = nowSecs + 30 * 24 * 60 * 60;
         break;
       case "90":
-        lockEndTime = now + 90 * 24 * 60 * 60;
+        lockEndTime = nowSecs + 90 * 24 * 60 * 60;
         break;
       case "180":
-        lockEndTime = now + 180 * 24 * 60 * 60;
+        lockEndTime = nowSecs + 180 * 24 * 60 * 60;
         break;
       case "365":
-        lockEndTime = now + 365 * 24 * 60 * 60;
+        lockEndTime = nowSecs + 365 * 24 * 60 * 60;
         break;
       case "730":
-        lockEndTime = now + 730 * 24 * 60 * 60;
+        lockEndTime = nowSecs + 730 * 24 * 60 * 60;
         break;
       case "custom":
-        lockEndTime = (new Date(customUnlockDate).getTime() || 0) / 1000;
+        lockEndTime = Math.floor(new Date(customUnlockDate).getTime() / 1000);
     }
 
     const receipt = await createLock({
@@ -100,6 +100,7 @@ const Lock = () => {
       lockTimeEnd: lockEndTime,
       decimals:
         tokenType === "native" ? 18 : (tokenDetails?.decimals as number),
+      isLpLock: lockType === "lp",
     });
 
     console.log("receipt", receipt);

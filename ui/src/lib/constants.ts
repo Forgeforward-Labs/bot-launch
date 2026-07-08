@@ -3,7 +3,7 @@ import { getAddress } from 'viem';
 export const tokenFactoryAddress = '0x2284Cff73d2384fDF91E84060d40A41581E642Ac';
 
 export const lockFactoryAddress = getAddress(
-  '0x03a901a563Fcd2692046FFD08a510F0246253596',
+  '0x0ff13de01a0cac7cbe377fffe3992086a6bc1e72',
 );
 
 export const airdropDistributorAddress =

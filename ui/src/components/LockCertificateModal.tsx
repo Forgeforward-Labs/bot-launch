@@ -88,7 +88,7 @@ export function LockCertificateModal({
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 32px Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('Token Lock Certificate', canvas.width / 2, 80);
+      ctx.fillText(lock.isLpLock ? 'LP Lock Certificate' : 'Token Lock Certificate', canvas.width / 2, 80);
 
       // Logo/Icon area
       ctx.fillStyle = '#00bc7d';
@@ -107,9 +107,7 @@ export function LockCertificateModal({
         `Lock Date: ${lock.lockDate}`,
         `Unlock Date: ${lock.unlockDate}`,
         `Status: ${lock.status}`,
-        `Type: ${
-          lock.token === zeroAddress ? 'Native Token' : 'Contract Token'
-        }`,
+        `Type: ${lock.isLpLock ? 'LP Lock' : lock.token === zeroAddress ? 'Native Token' : 'Token Lock'}`,
         lock.contractAddress ? `Contract: ${lock.contractAddress}` : '',
         lock.vestingEnabled ? `Vesting: ${lock.vestingPeriod} days` : '',
       ].filter(Boolean);
@@ -225,7 +223,7 @@ export function LockCertificateModal({
                     <LockIcon className="h-8 w-8 text-primary-foreground" />
                   </div>
                   <h2 className="text-3xl font-bold text-[#00bc7d]">
-                    Token Lock Certificate
+                    {lock.isLpLock ? 'LP Lock Certificate' : 'Token Lock Certificate'}
                   </h2>
                 </div>
                 <p className="text-muted-foreground">
@@ -259,12 +257,12 @@ export function LockCertificateModal({
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Type:</span>
-                        <Badge
-                          variant={
-                            lock.token === zeroAddress ? 'default' : 'secondary'
-                          }
-                        >
-                          {lock.token === zeroAddress ? 'Native' : 'Contract'}
+                        <Badge variant={lock.isLpLock ? 'default' : 'secondary'}>
+                          {lock.isLpLock
+                            ? 'LP Lock'
+                            : lock.token === zeroAddress
+                            ? 'Native Token'
+                            : 'Token Lock'}
                         </Badge>
                       </div>
                     </div>

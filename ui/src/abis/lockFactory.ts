@@ -5,36 +5,12 @@ const abi = [
     anonymous: false,
     inputs: [
       { indexed: true, internalType: "address", name: "lock", type: "address" },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "owner",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "lockingAmount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "lockTimeEnd",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "projectImageUrl",
-        type: "string",
-      },
+      { indexed: true, internalType: "address", name: "token", type: "address" },
+      { indexed: true, internalType: "address", name: "owner", type: "address" },
+      { indexed: false, internalType: "uint256", name: "lockingAmount", type: "uint256" },
+      { indexed: false, internalType: "uint256", name: "lockTimeEnd", type: "uint256" },
+      { indexed: false, internalType: "string", name: "projectImageUrl", type: "string" },
+      { indexed: false, internalType: "bool", name: "isLpLock", type: "bool" },
     ],
     name: "LockCreated",
     type: "event",
@@ -46,12 +22,13 @@ const abi = [
       { internalType: "uint256", name: "_lockingAmount", type: "uint256" },
       { internalType: "uint256", name: "_lockTimeEnd", type: "uint256" },
       { internalType: "string", name: "_projectImageUrl", type: "string" },
+      { internalType: "bool", name: "_isLpLock", type: "bool" },
     ],
     name: "createLock",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "payable",
     type: "function",
   },
-];
+] as const;
 
 export default abi;

@@ -231,7 +231,7 @@ export default function HomeView() {
                   <span>→</span>
                 </button>
                 <button
-                  onClick={() => navigate("/sales/create")}
+                  onClick={() => navigate("/apply")}
                   className="bg-transparent border border-white/20 rounded-xl px-6 py-3.5 md:px-8 md:py-4 text-white text-sm md:text-[15px] font-semibold cursor-pointer transition-all duration-200 hover:border-white/40"
                 >
                   Apply to Launch
@@ -345,7 +345,7 @@ export default function HomeView() {
                 <div className="text-4xl mb-3">🚀</div>
                 <div className="mb-4">No presales yet — be the first!</div>
                 <button
-                  onClick={() => navigate("/sales/create")}
+                  onClick={() => navigate("/apply")}
                   className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-bold px-6 py-2.5 rounded-xl text-sm"
                 >
                   Create First Sale

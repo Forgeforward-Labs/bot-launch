@@ -11,6 +11,7 @@ import PresaleDetail from "./pages/PresaleDetail";
 import Portfolio from "./pages/Portfolio";
 import Admin from "./pages/Admin";
 import CreateSale from "./pages/CreateSale";
+import ApplyLaunch from "./pages/ApplyLaunch";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/launchpad" element={<Launchpad />} />
         <Route path="/sales" element={<Sales />} />
         <Route path="/sales/create" element={<CreateSale />} />
+        <Route path="/apply" element={<ApplyLaunch />} />
         <Route path="/sales/:id" element={<PresaleDetail />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/admin" element={<Admin />} />

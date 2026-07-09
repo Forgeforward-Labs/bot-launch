@@ -318,7 +318,7 @@ export default function Sales() {
           <p className="text-zinc-500 text-sm md:text-base">Browse and filter all presale opportunities</p>
         </div>
         <button
-          onClick={() => navigate("/sales/create")}
+          onClick={() => navigate("/apply")}
           className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-bold px-5 py-2.5 rounded-xl text-sm hover:opacity-90 transition-opacity"
         >
           + Create Sale
@@ -442,7 +442,7 @@ export default function Sales() {
               </div>
               {presales.length === 0 ? (
                 <button
-                  onClick={() => navigate("/sales/create")}
+                  onClick={() => navigate("/apply")}
                   className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-bold px-6 py-2.5 rounded-xl text-sm"
                 >
                   Create First Sale

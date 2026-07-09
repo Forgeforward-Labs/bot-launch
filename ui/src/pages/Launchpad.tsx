@@ -200,7 +200,7 @@ const Launchpad = () => {
               Create a presale on BOT Chain and get access to our community of investors and DeFi enthusiasts.
             </p>
             <button
-              onClick={() => navigate("/sales/create")}
+              onClick={() => navigate("/apply")}
               className="bg-gradient-to-r from-emerald-400 to-emerald-500 text-black font-bold px-8 py-3 rounded-xl flex items-center gap-2 mx-auto hover:opacity-90 transition-opacity"
             >
               <Rocket className="w-5 h-5" />

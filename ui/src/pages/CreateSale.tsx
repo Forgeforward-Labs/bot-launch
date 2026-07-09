@@ -189,7 +189,7 @@ const CreateSale = () => {
               </span>
             </h1>
             <p className="text-zinc-400">
-              Launch your token presale on Sominia Network
+              Launch your token presale on BOT Chain
             </p>
           </div>
 

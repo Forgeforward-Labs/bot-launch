@@ -44,11 +44,11 @@ const Launchpad = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">
               <span className="bg-gradient-to-r from-emerald-400 to-emerald-500 bg-clip-text text-transparent">
-                Launchpad
+                Forge
               </span>
             </h1>
             <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-              Discover and participate in the latest token launches on Somnia Network
+              Discover and participate in the latest token launches on BOT Chain
             </p>
           </div>
 
@@ -197,7 +197,7 @@ const Launchpad = () => {
               Want to Launch Your Project?
             </h3>
             <p className="text-zinc-400 mb-6 max-w-2xl mx-auto">
-              Create a presale on Somnia Network and get access to our community of investors and DeFi enthusiasts.
+              Create a presale on BOT Chain and get access to our community of investors and DeFi enthusiasts.
             </p>
             <button
               onClick={() => navigate("/sales/create")}

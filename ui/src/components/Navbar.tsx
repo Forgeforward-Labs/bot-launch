@@ -36,7 +36,7 @@ export default function Navigation() {
             <Link to="/" className="flex items-center gap-2.5">
               <span className="text-xl md:text-2xl">◈</span>
               <span className="text-base md:text-xl font-bold tracking-tight bg-gradient-to-br from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-                LaunchPad
+                Forge
               </span>
             </Link>
 
@@ -78,7 +78,7 @@ export default function Navigation() {
           <div className="flex items-center gap-2.5 mb-8">
             <span className="text-2xl">◈</span>
             <span className="text-xl font-bold bg-gradient-to-br from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              LaunchPad
+              Forge
             </span>
           </div>
 

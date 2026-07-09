@@ -217,8 +217,9 @@ export default function HomeView() {
               </h1>
 
               <p className="text-base md:text-lg text-zinc-400 leading-relaxed mb-8 md:mb-10 max-w-[480px] mx-auto md:mx-0">
-                The most trusted launchpad for token presales on Somnia. Permanent
-                LP lock, verified projects, and secure smart contracts.
+                Forge is the most trusted launchpad for token presales on BOT
+                Chain. Permanent LP lock, verified projects, and secure smart
+                contracts.
               </p>
 
               <div className="flex gap-3 justify-center md:justify-start flex-wrap">

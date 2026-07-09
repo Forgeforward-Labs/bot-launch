@@ -19,7 +19,7 @@ networks:
     - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
   - name: SalesFactory
     address:
-    - 0x2617C66707d40b33a869b1dBb392B6FA5CA1D156
+    - 0xee438609d158a6406bc237ebae82fd5c748e2154
     abi_file_path: ./abis/SalesFactory.json
     handler: src/EventHandlers.ts
     events:

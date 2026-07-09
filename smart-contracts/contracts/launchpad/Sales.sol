@@ -143,7 +143,11 @@ contract Sales is Ownable, Whitelistable {
     }
 
     //claim
-    function claim() internal onlyAfterSale {
+    function claim() external onlyAfterSale {
+        require(
+            saleData.saleSold >= saleData.softCap,
+            "Soft cap not reached"
+        );
         require(
             participants[msg.sender].status == ParticipantStatus.DEFAULT,
             "Cannot Claim"
@@ -152,26 +156,32 @@ contract Sales is Ownable, Whitelistable {
         if (claimableAmount == 0) {
             revert NoClaimableAmount();
         }
-        IERC20(token).transfer(msg.sender, claimableAmount);
         participants[msg.sender].status = ParticipantStatus.CLAIMED;
+        IERC20(token).transfer(msg.sender, claimableAmount);
         emit TokensClaimed(msg.sender, claimableAmount);
     }
 
     function getClaimableAmount(
         address participant
     ) internal view returns (uint256) {
-        uint256 price = saleData.totalTokensForSale / saleData.saleSold;
-        return participants[participant].amount * price;
+        return
+            (saleData.totalTokensForSale * participants[participant].amount) /
+            saleData.saleSold;
     }
 
     //refund
-    function refund() internal onlyAfterSale {
-        require(saleData.saleSold >= saleData.softCap, "Soft cap reached");
-        ParticipantStatus status = participants[msg.sender].status;
+    function refund() external onlyAfterSale {
+        require(saleData.saleSold < saleData.softCap, "Soft cap was reached");
+        require(
+            participants[msg.sender].status == ParticipantStatus.DEFAULT,
+            "Cannot claim refund"
+        );
         uint256 refundAmount = participants[msg.sender].amount;
-        require(status == ParticipantStatus.DEFAULT, "Can not claim refund");
-        payable(address(msg.sender)).transfer(refundAmount);
+        if (refundAmount == 0) {
+            revert InvalidAmount();
+        }
         participants[msg.sender].status = ParticipantStatus.REFUNDED;
+        payable(msg.sender).transfer(refundAmount);
         emit Refunded(msg.sender, refundAmount);
     }
 
@@ -179,6 +189,10 @@ contract Sales is Ownable, Whitelistable {
     function finalizeSale(
         address casher
     ) external payable onlyAfterSale onlyOwner {
+        require(
+            saleData.saleSold >= saleData.softCap,
+            "Soft cap not reached"
+        );
         uint256 sold = saleData.saleSold;
         uint256 liquidity = (saleData.liquidityBPS * sold) / 100;
         uint256 treasury = (TREASURY_ALLOCATION_PERCENTAGE * sold) / 100;

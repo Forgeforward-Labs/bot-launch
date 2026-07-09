@@ -16,6 +16,7 @@ interface ContributionItem {
   symbol: string;
   logo: string;
   saleStatus: string;
+  saleFailed: boolean;
   contributed: number;
   estimatedTokens: number;
   participantStatus: number; // 0=DEFAULT, 1=CLAIMED, 2=REFUNDED
@@ -96,6 +97,10 @@ export default function PortfolioView() {
       const presaleRate =
         hardCapBig > 0n ? Number(totalTokensBig) / Number(hardCapBig) : 0;
 
+      const softCapBig = BigInt(presaleRaw?.softCap ?? "0");
+      const saleSoldBig = BigInt(presaleRaw?.saleSold ?? "0");
+      const saleFailed = saleStatus === "ended" && saleSoldBig < softCapBig;
+
       const contributed = saleContributions[saleAddr];
       const estimatedTokens = contributed * presaleRate;
 
@@ -105,6 +110,7 @@ export default function PortfolioView() {
         symbol: meta?.symbol ?? "???",
         logo: meta?.logoUrl ?? "🚀",
         saleStatus,
+        saleFailed,
         contributed,
         estimatedTokens,
         participantStatus: participantStatuses[saleAddr] ?? 0,
@@ -206,18 +212,22 @@ export default function PortfolioView() {
                 ? "Claimed"
                 : item.participantStatus === 2
                   ? "Refunded"
-                  : item.saleStatus === "finalized"
-                    ? "Claimable"
-                    : "Pending";
+                  : item.saleFailed
+                    ? "Refundable"
+                    : item.saleStatus === "finalized"
+                      ? "Claimable"
+                      : "Pending";
 
             const claimColor =
               item.participantStatus === 1
                 ? "bg-purple-500/10 text-purple-400 border-purple-500/20"
                 : item.participantStatus === 2
                   ? "bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
-                  : item.saleStatus === "finalized"
-                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                    : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+                  : item.saleFailed
+                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                    : item.saleStatus === "finalized"
+                      ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                      : "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
 
             return (
               <div

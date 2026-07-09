@@ -19,7 +19,8 @@ export default function PresaleDetail() {
   const [activeTab, setActiveTab] = useState("contribute");
   const { address, isConnected } = useAccount();
   const navigate = useNavigate();
-  const { buy, finalizeSale, getParticipant, getLiveSaleData } = useSales();
+  const { buy, finalizeSale, claim, refund, getParticipant, getLiveSaleData } =
+    useSales();
 
   const { data, loading, error, refetch } = useGetPresaleQuery({
     variables: { saleAddress: saleAddress ?? "" },
@@ -110,6 +111,19 @@ export default function PresaleDetail() {
   const remainingAllocation = Math.max(0, maxBuyEth - userContributionEth);
   const canContribute = status === "live" && isConnected;
 
+  const softCapMet = saleSold >= softCap;
+  const saleFailed = status === "ended" && !softCapMet;
+  const canClaim =
+    isConnected &&
+    status === "finalized" &&
+    participantStatus === 0 &&
+    userContributionEth > 0;
+  const canRefund =
+    isConnected &&
+    saleFailed &&
+    participantStatus === 0 &&
+    userContributionEth > 0;
+
   const handleBuy = async () => {
     if (!saleAddress || !contribution) return;
     setIsSubmitting(true);
@@ -140,6 +154,43 @@ export default function PresaleDetail() {
     try {
       await finalizeSale(saleAddress, address);
       refetch();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const refreshParticipant = async () => {
+    if (!saleAddress || !address) return;
+    const p = await getParticipant(saleAddress, address);
+    if (p)
+      setParticipant(
+        p as { participant: string; amount: bigint; status: number },
+      );
+  };
+
+  const handleClaim = async () => {
+    if (!saleAddress) return;
+    setIsSubmitting(true);
+    try {
+      const receipt = await claim(saleAddress);
+      if (receipt) {
+        await refreshParticipant();
+        refetch();
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRefund = async () => {
+    if (!saleAddress) return;
+    setIsSubmitting(true);
+    try {
+      const receipt = await refund(saleAddress);
+      if (receipt) {
+        await refreshParticipant();
+        refetch();
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -364,6 +415,9 @@ export default function PresaleDetail() {
                     {userContributionEth.toFixed(4)} BOT
                     {participantStatus === 1 && " · Tokens Claimed"}
                     {participantStatus === 2 && " · Refunded"}
+                    {participantStatus === 0 &&
+                      saleFailed &&
+                      " · Refund Available"}
                   </div>
                 </div>
               </div>
@@ -461,6 +515,42 @@ export default function PresaleDetail() {
                         : "Contribute"}
                 </button>
               </>
+            ) : saleFailed ? (
+              <>
+                <div className="bg-zinc-800/30 rounded-xl p-6 text-center mb-5">
+                  <div className="text-xs text-zinc-500 mb-2">
+                    Your Contribution
+                  </div>
+                  <div className="text-3xl font-bold gradient-text">
+                    {userContributionEth.toFixed(4)} BOT
+                  </div>
+                  <div className="text-xs text-zinc-500 mt-2">
+                    Soft cap wasn't reached before the deadline — contributions
+                    are refundable
+                    {participantStatus === 2 && " · Refunded ✓"}
+                  </div>
+                </div>
+
+                <button
+                  disabled={!canRefund || isSubmitting}
+                  onClick={handleRefund}
+                  className={`w-full rounded-xl py-4 text-base font-bold transition-all ${
+                    canRefund && !isSubmitting
+                      ? "gradient-btn text-black"
+                      : "bg-zinc-800/50 text-zinc-600 cursor-not-allowed"
+                  }`}
+                >
+                  {isSubmitting
+                    ? "Processing..."
+                    : !isConnected
+                      ? "Connect Wallet"
+                      : participantStatus === 2
+                        ? "Refunded ✓"
+                        : userContributionEth === 0
+                          ? "No Contribution"
+                          : "Withdraw Contribution"}
+                </button>
+              </>
             ) : (
               <>
                 <div className="bg-zinc-800/30 rounded-xl p-6 text-center mb-5">
@@ -475,25 +565,35 @@ export default function PresaleDetail() {
                     {meta?.symbol ?? "tokens"}
                   </div>
                   <div className="text-xs text-zinc-500 mt-2">
-                    {participantStatus === 0
-                      ? "Available after finalization"
-                      : participantStatus === 1
-                        ? "Claimed ✓"
-                        : "Refunded"}
+                    {participantStatus === 1
+                      ? "Claimed ✓"
+                      : participantStatus === 2
+                        ? "Refunded"
+                        : status === "finalized"
+                          ? "Ready to claim"
+                          : "Available after finalization"}
                   </div>
                 </div>
 
                 <button
-                  disabled
-                  className="w-full rounded-xl py-4 text-base font-bold bg-zinc-800/50 text-zinc-600 cursor-not-allowed"
+                  disabled={!canClaim || isSubmitting}
+                  onClick={handleClaim}
+                  className={`w-full rounded-xl py-4 text-base font-bold transition-all ${
+                    canClaim && !isSubmitting
+                      ? "gradient-btn text-black"
+                      : "bg-zinc-800/50 text-zinc-600 cursor-not-allowed"
+                  }`}
                 >
-                  {status === "finalized"
-                    ? "Claim via Contract"
-                    : "Claim Available After Finalization"}
+                  {isSubmitting
+                    ? "Processing..."
+                    : !isConnected
+                      ? "Connect Wallet"
+                      : participantStatus === 1
+                        ? "Claimed ✓"
+                        : status === "finalized"
+                          ? "Claim Tokens"
+                          : "Claim Available After Finalization"}
                 </button>
-                <p className="text-xs text-zinc-600 text-center mt-2">
-                  Claiming is handled directly via the contract
-                </p>
               </>
             )}
           </div>

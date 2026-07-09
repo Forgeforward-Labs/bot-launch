@@ -69,6 +69,62 @@ export const useSales = () => {
     }
   };
 
+  const claim = async (saleAddress: string) => {
+    if (!client) {
+      toast.error("Wallet not connected");
+      return;
+    }
+
+    try {
+      const { request } = await readClient.simulateContract({
+        address: saleAddress as `0x${string}`,
+        abi: salesContractAbi,
+        functionName: "claim",
+        account: client.account,
+      });
+
+      toast.info("Claiming tokens...");
+      const tx = await client.writeContract(request);
+      const receipt = await readClient.waitForTransactionReceipt({ hash: tx });
+
+      if (receipt.status === "success") {
+        toast.success("Tokens claimed!");
+        return receipt;
+      }
+    } catch (error) {
+      console.error("claim error:", error);
+      toast.error("Failed to claim tokens");
+    }
+  };
+
+  const refund = async (saleAddress: string) => {
+    if (!client) {
+      toast.error("Wallet not connected");
+      return;
+    }
+
+    try {
+      const { request } = await readClient.simulateContract({
+        address: saleAddress as `0x${string}`,
+        abi: salesContractAbi,
+        functionName: "refund",
+        account: client.account,
+      });
+
+      toast.info("Requesting refund...");
+      const tx = await client.writeContract(request);
+      const receipt = await readClient.waitForTransactionReceipt({ hash: tx });
+
+      if (receipt.status === "success") {
+        toast.success("Refund sent!");
+        return receipt;
+      }
+    } catch (error) {
+      console.error("refund error:", error);
+      toast.error("Failed to get refund");
+    }
+  };
+
   const getParticipant = async (saleAddress: string, participant: string) => {
     try {
       const result = await readClient.readContract({
@@ -182,7 +238,16 @@ export const useSales = () => {
     }
   };
 
-  return { buy, finalizeSale, getParticipant, getLiveSaleData, getTokenData, updateWhitelist };
+  return {
+    buy,
+    finalizeSale,
+    claim,
+    refund,
+    getParticipant,
+    getLiveSaleData,
+    getTokenData,
+    updateWhitelist,
+  };
 };
 
 export default useSales;

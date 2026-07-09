@@ -9,4 +9,4 @@ export const lockFactoryAddress = getAddress(
 export const airdropDistributorAddress =
   '0x592B56644ca7adb298Ec373eC10a36f435b9f410';
 
-export const salesFactoryAddress = '0x2617C66707d40b33a869b1dBb392B6FA5CA1D156';
+export const salesFactoryAddress = '0xee438609d158a6406bc237ebae82fd5c748e2154';

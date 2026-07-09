@@ -24,6 +24,20 @@ const abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "claim",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "refund",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       { internalType: "address", name: "_participant", type: "address" },
     ],

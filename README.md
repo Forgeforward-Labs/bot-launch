@@ -78,7 +78,7 @@ See [`smart-contracts/README.md`](smart-contracts/README.md), [`indexer/README.m
 - Vesting schedules / cliffs for locked tokens (beyond flat timelocks)
 - Anti-bot / anti-snipe protections for sale launches
 - Multi-pool liquidity support as BOT Chain's DEX ecosystem grows
-- DAO-governed treasury and protocol fee parameters
+- **Voting platform** — token holders vote on proposals for their project's launch (e.g. early unlocks or extensions of locked tokens/LP), giving communities a say over decisions that were previously owner-only
 - Analytics dashboard for project creators (holder growth, LP health, vesting unlocks)
 - Mainnet launch + cross-chain presale support
 

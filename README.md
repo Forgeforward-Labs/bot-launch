@@ -3,7 +3,7 @@
 A full-stack token launch platform built natively on **BOT Chain** — token factory, presales with automatic DEX liquidity migration, token/LP locking, and airdrops, all in one non-custodial suite.
 
 🌐 **Live app:** https://bot-launch.vercel.app/
-🐦 **X:** [@BOTChain_ai](https://twitter.com/BOTChain_ai)
+🐦 **X:** [post](https://x.com/0xMumin_/status/2074885857635405960?s=20)
 
 ---
 

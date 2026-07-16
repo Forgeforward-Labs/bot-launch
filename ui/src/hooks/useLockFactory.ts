@@ -97,7 +97,7 @@ export const useLockFactory = () => {
         abi,
         functionName: "createLock",
         args: [
-          token,
+          token as `0x${string}`,
           client.account.address,
           amountInWei,
           BigInt(lockTimeEnd),

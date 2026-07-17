@@ -31,5 +31,35 @@ networks:
     - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
     - event: Refunded(address indexed participant, uint256 ethAmount)
     - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
+- id: 677
+  rpc: https://rpc.botchain.ai
+  start_block: 1
+  contracts:
+  - name: TokenFactory
+    address: 0x2284cff73d2384fdf91e84060d40a41581e642ac
+    handler: src/EventHandlers.ts
+    events:
+    - event: FeeTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, uint8 transferTax, address owner)
+    - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
+  - name: LockFactory
+    address:
+    - 0x03a901a563fcd2692046ffd08a510f0246253596
+    handler: src/EventHandlers.ts
+    events:
+    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
+  - name: SalesFactory
+    address:
+    - 0x2617c66707d40b33a869b1dbb392b6fa5ca1d156
+    abi_file_path: ./abis/SalesFactory.json
+    handler: src/EventHandlers.ts
+    events:
+    - event: SaleCreated
+  - name: Sales
+    handler: src/EventHandlers.ts
+    events:
+    - event: TokensPurchased(address indexed buyer, uint256 ethAmount)
+    - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
+    - event: Refunded(address indexed participant, uint256 ethAmount)
+    - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
 unordered_multichain_mode: true
 preload_handlers: true

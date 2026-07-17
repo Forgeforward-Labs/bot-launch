@@ -1,12 +1,13 @@
 import { useReadClient } from "@/lib/useReadClient";
 import { abi as TokenFactoryAbi } from "../abis/TokenFactory.json";
-import { tokenFactoryAddress } from "@/lib/constants";
+import { useContractAddresses } from "@/lib/constants";
 import { useWalletClient } from "wagmi";
 import { toast } from "sonner";
 
 export const useTokenFactory = () => {
   const readClient = useReadClient();
   const { data: client } = useWalletClient();
+  const { tokenFactory: tokenFactoryAddress } = useContractAddresses();
 
   const createTokens = async (
     tokenName: string,

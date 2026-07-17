@@ -1,5 +1,5 @@
 import { useWalletClient } from "wagmi";
-import { lockFactoryAddress } from "@/lib/constants";
+import { useContractAddresses } from "@/lib/constants";
 import abi from "../abis/lockFactory";
 import { useReadClient } from "@/lib/useReadClient";
 import { zeroAddress, parseUnits } from "viem";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 export const useLockFactory = () => {
   const { data: client } = useWalletClient();
   const readClient = useReadClient();
+  const { lockFactory: lockFactoryAddress } = useContractAddresses();
 
   //   address _token,
   //         address _owner,

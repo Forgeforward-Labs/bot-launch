@@ -1,5 +1,5 @@
 import { useWalletClient } from "wagmi";
-import { salesFactoryAddress } from "@/lib/constants";
+import { useContractAddresses } from "@/lib/constants";
 import salesFactoryAbi from "@/abis/salesFactory";
 import { useReadClient } from "@/lib/useReadClient";
 import { toast } from "sonner";
@@ -26,6 +26,7 @@ export interface CreateSaleParams {
 export const useSalesFactory = () => {
   const { data: client } = useWalletClient();
   const readClient = useReadClient();
+  const { salesFactory: salesFactoryAddress } = useContractAddresses();
 
   const createSale = async (params: CreateSaleParams) => {
     if (!client) {

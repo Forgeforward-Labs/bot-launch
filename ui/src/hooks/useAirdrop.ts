@@ -1,6 +1,6 @@
 import { useReadClient } from "@/lib/useReadClient";
 import airdropAbi from "../abis/airdropDistributor";
-import { airdropDistributorAddress } from "@/lib/constants";
+import { useContractAddresses } from "@/lib/constants";
 import { useWalletClient } from "wagmi";
 import { toast } from "sonner";
 import standardTokenAbi from "@/abis/StandardToken";
@@ -8,6 +8,7 @@ import standardTokenAbi from "@/abis/StandardToken";
 export const useAirdrop = () => {
   const readClient = useReadClient();
   const { data: client } = useWalletClient();
+  const { airdropDistributor: airdropDistributorAddress } = useContractAddresses();
 
   const getTokenApproval = async (
     address: `0x${string}`,

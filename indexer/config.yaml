@@ -1,5 +1,29 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
 name: envio-indexer
+
+contracts:
+- name: TokenFactory
+  handler: src/EventHandlers.ts
+  events:
+  - event: FeeTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, uint8 transferTax, address owner)
+  - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
+- name: LockFactory
+  handler: src/EventHandlers.ts
+  events:
+  - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
+- name: SalesFactory
+  abi_file_path: ./abis/SalesFactory.json
+  handler: src/EventHandlers.ts
+  events:
+  - event: SaleCreated
+- name: Sales
+  handler: src/EventHandlers.ts
+  events:
+  - event: TokensPurchased(address indexed buyer, uint256 ethAmount)
+  - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
+  - event: Refunded(address indexed participant, uint256 ethAmount)
+  - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
+
 networks:
 - id: 968
   rpc: https://rpc.bohr.life
@@ -7,59 +31,20 @@ networks:
   contracts:
   - name: TokenFactory
     address: 0x2284Cff73d2384fDF91E84060d40A41581E642Ac
-    handler: src/EventHandlers.ts
-    events:
-    - event: FeeTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, uint8 transferTax, address owner)
-    - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
   - name: LockFactory
-    address:
-    - 0x0ff13de01a0cac7cbe377fffe3992086a6bc1e72
-    handler: src/EventHandlers.ts
-    events:
-    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
+    address: 0x0ff13de01a0cac7cbe377fffe3992086a6bc1e72
   - name: SalesFactory
-    address:
-    - 0xee438609d158a6406bc237ebae82fd5c748e2154
-    abi_file_path: ./abis/SalesFactory.json
-    handler: src/EventHandlers.ts
-    events:
-    - event: SaleCreated
-  - name: Sales
-    handler: src/EventHandlers.ts
-    events:
-    - event: TokensPurchased(address indexed buyer, uint256 ethAmount)
-    - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
-    - event: Refunded(address indexed participant, uint256 ethAmount)
-    - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
+    address: 0xee438609d158a6406bc237ebae82fd5c748e2154
 - id: 677
   rpc: https://rpc.botchain.ai
   start_block: 1
   contracts:
   - name: TokenFactory
     address: 0x2284cff73d2384fdf91e84060d40a41581e642ac
-    handler: src/EventHandlers.ts
-    events:
-    - event: FeeTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, uint8 transferTax, address owner)
-    - event: StandardTokenCreated(address token, string name, string symbol, uint256 totalSupply, uint8 decimalPlaces, address owner)
   - name: LockFactory
-    address:
-    - 0x03a901a563fcd2692046ffd08a510f0246253596
-    handler: src/EventHandlers.ts
-    events:
-    - event: LockCreated(address indexed lock, address indexed token, address indexed owner, uint256 lockingAmount, uint256 lockTimeEnd, string projectImageUrl, bool isLpLock)
+    address: 0x03a901a563fcd2692046ffd08a510f0246253596
   - name: SalesFactory
-    address:
-    - 0x2617c66707d40b33a869b1dbb392b6fa5ca1d156
-    abi_file_path: ./abis/SalesFactory.json
-    handler: src/EventHandlers.ts
-    events:
-    - event: SaleCreated
-  - name: Sales
-    handler: src/EventHandlers.ts
-    events:
-    - event: TokensPurchased(address indexed buyer, uint256 ethAmount)
-    - event: TokensClaimed(address indexed claimer, uint256 tokenAmount)
-    - event: Refunded(address indexed participant, uint256 ethAmount)
-    - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
+    address: 0x2617c66707d40b33a869b1dbb392b6fa5ca1d156
+
 unordered_multichain_mode: true
 preload_handlers: true

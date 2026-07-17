@@ -1,10 +1,13 @@
 import { createPublicClient, http } from "viem";
-import { botChainTestnet } from "./chains";
+import { botChainTestnet, botChainMainnet } from "./chains";
+import { useAccount } from "wagmi";
 
 const useReadClient = () => {
+  const { chainId } = useAccount();
+  const chain = chainId === botChainMainnet.id ? botChainMainnet : botChainTestnet;
   return createPublicClient({
-    chain: botChainTestnet,
-    transport: http(botChainTestnet.rpcUrls.default.http[0]),
+    chain,
+    transport: http(chain.rpcUrls.default.http[0]),
   });
 };
 export { useReadClient };

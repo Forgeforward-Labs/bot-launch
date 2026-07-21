@@ -24,7 +24,7 @@ contracts:
   - event: Refunded(address indexed participant, uint256 ethAmount)
   - event: SaleFinalized(uint256 totalSold, uint256 liquidityAmount, uint256 treasuryAmount)
 
-networks:
+chains:
 - id: 968
   rpc: https://rpc.bohr.life
   start_block: 15196082
@@ -46,5 +46,3 @@ networks:
   - name: SalesFactory
     address: 0x2617c66707d40b33a869b1dbb392b6fa5ca1d156
 
-unordered_multichain_mode: true
-preload_handlers: true

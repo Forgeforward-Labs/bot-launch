@@ -1,8 +1,5 @@
 import assert from "assert";
-import { 
-  TestHelpers,
-  TokenFactory_FeeTokenCreated
-} from "generated";
+import { TestHelpers, TokenFactory_FeeTokenCreated } from "envio";
 const { MockDb, TokenFactory } = TestHelpers;
 
 describe("TokenFactory contract FeeTokenCreated event tests", () => {

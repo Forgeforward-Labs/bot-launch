@@ -1,21 +1,14 @@
 /*
  * Please refer to https://docs.envio.dev for a thorough guide on all Envio indexer features
  */
-import {
-  Lock,
-  LockFactory,
-  Presale,
-  PresalePurchase,
-  Sales,
-  SalesFactory,
-  TokenFactory,
-  Tokens,
-} from "generated";
+import { indexer, Lock, LockFactory, Presale, PresalePurchase, Sales, SalesFactory, TokenFactory, Tokens } from "envio";
 // import {} from "/generated/templates";
-import type { PresaleStatus_t } from "generated/src/db/Enums.gen";
-import type { TokenType_t } from "generated/src/db/Enums.gen";
+import { type PresaleStatus } from "envio";
+import { type TokenType } from "envio";
 
-TokenFactory.FeeTokenCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "TokenFactory", event: "FeeTokenCreated" },
+  async ({ event, context }) => {
   const entity: Tokens = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     token: event.params.token,
@@ -24,7 +17,7 @@ TokenFactory.FeeTokenCreated.handler(async ({ event, context }) => {
     totalSupply: event.params.totalSupply ?? BigInt(0),
     decimalPlaces: event.params.decimalPlaces ?? BigInt(0),
     owner: event.params.owner ?? "0x0000000000000000000000000000000000000000",
-    tokenType: "FEE" as TokenType_t,
+    tokenType: "FEE" as TokenType,
     createdAt: BigInt(event.block.timestamp),
     fee: event.params.transferTax ?? BigInt(0),
     transferTax: event.params.transferTax ?? BigInt(0),
@@ -51,9 +44,12 @@ TokenFactory.FeeTokenCreated.handler(async ({ event, context }) => {
   }
 
   context.Tokens.set(entity);
-});
+}
+);
 
-TokenFactory.StandardTokenCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "TokenFactory", event: "StandardTokenCreated" },
+  async ({ event, context }) => {
   const entity: Tokens = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     token: event.params.token as string,
@@ -62,7 +58,7 @@ TokenFactory.StandardTokenCreated.handler(async ({ event, context }) => {
     totalSupply: event.params.totalSupply,
     decimalPlaces: event.params.decimalPlaces,
     owner: event.params.owner,
-    tokenType: "STANDARD" as TokenType_t,
+    tokenType: "STANDARD" as TokenType,
     createdAt: BigInt(event.block.timestamp),
     fee: BigInt(0),
     transferTax: BigInt(0),
@@ -89,9 +85,12 @@ TokenFactory.StandardTokenCreated.handler(async ({ event, context }) => {
   }
 
   context.Tokens.set(entity);
-});
+}
+);
 
-LockFactory.LockCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "LockFactory", event: "LockCreated" },
+  async ({ event, context }) => {
   const isLpLock = event.params.isLpLock;
 
   const entity: Lock = {
@@ -131,13 +130,19 @@ LockFactory.LockCreated.handler(async ({ event, context }) => {
   }
 
   context.Lock.set(entity);
-});
+}
+);
 
-SalesFactory.SaleCreated.contractRegister(({ event, context }) => {
-  context.addSales(event.params.saleAddress);
-});
+indexer.contractRegister(
+  { contract: "SalesFactory", event: "SaleCreated" },
+  async ({ event, context }) => {
+  context.chain.Sales.add(event.params.saleAddress);
+}
+);
 
-SalesFactory.SaleCreated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "SalesFactory", event: "SaleCreated" },
+  async ({ event, context }) => {
   // saleData is a positional tuple:
   // [0] startTime, [1] endTime, [2] softCap, [3] hardCap, [4] maxBuy,
   // [5] saleSold, [6] totalTokensForSale, [7] salesJson,
@@ -149,7 +154,7 @@ SalesFactory.SaleCreated.handler(async ({ event, context }) => {
     saleOwner: event.params.saleOwner,
     token: event.params.token,
     createdAt: BigInt(event.block.timestamp),
-    status: "ACTIVE" as PresaleStatus_t,
+    status: "ACTIVE" as PresaleStatus,
     startTime: saleData[0],
     endTime: saleData[1],
     softCap: saleData[2],
@@ -187,9 +192,12 @@ SalesFactory.SaleCreated.handler(async ({ event, context }) => {
   }
 
   context.Presale.set(entity);
-});
+}
+);
 
-Sales.TokensPurchased.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Sales", event: "TokensPurchased" },
+  async ({ event, context }) => {
   const entity: PresalePurchase = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     saleAddress: event.srcAddress,
@@ -209,18 +217,22 @@ Sales.TokensPurchased.handler(async ({ event, context }) => {
       participantCount: BigInt(presale.participantCount ?? 0) + BigInt(1),
     });
   }
-});
+}
+);
 
-Sales.SaleFinalized.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Sales", event: "SaleFinalized" },
+  async ({ event, context }) => {
   const presale = await context.Presale.get(event.srcAddress);
 
   if (presale) {
     context.Presale.set({
       ...presale,
-      status: "FINALIZED" as PresaleStatus_t,
+      status: "FINALIZED" as PresaleStatus,
       totalSold: event.params.totalSold,
       liquidityAmount: event.params.liquidityAmount,
       treasuryAmount: event.params.treasuryAmount,
     });
   }
-});
+}
+);
